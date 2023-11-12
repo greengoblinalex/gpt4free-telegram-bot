@@ -8,6 +8,7 @@ from aiogram.utils import executor
 import g4f
 
 from constants import (MAX_MESSAGES, START_PHRASE,
+                       PLS_WAIT_PHRASE, ERROR_PHRASE,
                        DATA_FILE, START_COMMAND,
                        FIRST_QUESTION, FIRST_ANSWER)
 
@@ -52,7 +53,7 @@ def get_user_messages_list(user_id, users_messages):
 
 async def ask_gpt(messages):
     return await g4f.ChatCompletion.create_async(
-        model=g4f.models.gpt_35_turbo,
+        model=g4f.models.gpt_35_turbo_16k_0613,
         messages=messages
     )
 
@@ -62,6 +63,8 @@ async def process_message(message: types.Message):
     if message.text.lower() == START_COMMAND:
         await message.answer(START_PHRASE)
     else:
+        wait_message = await message.answer(PLS_WAIT_PHRASE)
+
         user_id = str(message.from_user.id)
         users_messages = await load_from_json(DATA_FILE)
 
@@ -75,7 +78,10 @@ async def process_message(message: types.Message):
         )
 
         answer = await ask_gpt(messages)
-        await message.answer(answer)
+        if answer == ERROR_PHRASE:
+            answer = await ask_gpt(messages)
+
+        await bot.edit_message_text(answer, message.chat.id, wait_message.message_id)
 
         messages.append({'role': 'assistant', 'content': answer})
         users_messages[user_id] = messages

@@ -1,9 +1,12 @@
-MAX_MESSAGES = 20
+MAX_MESSAGES = 14
 
 DATA_FILE = 'data.json'
 
 START_COMMAND = '/start'
-START_PHRASE = 'Привет! Я ChatGPT-бот. Напиши свой вопрос, а я постараюсь ответить на него'
+
+START_PHRASE = 'Здравствуйте! Я ChatGPT-бот. Напишите свой вопрос, а я постараюсь ответить на него.'
+PLS_WAIT_PHRASE = 'Пожалуйста, подождите немного, пока я думаю над ответом...'
+ERROR_PHRASE = 'Hmm, I am not sure. Email support@chatbase.co for more info.'
 
 FIRST_QUESTION = {
     "role": "user",
