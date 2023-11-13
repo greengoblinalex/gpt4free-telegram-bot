@@ -1,4 +1,4 @@
-MAX_MESSAGES = 6
+MAX_MESSAGES = 4
 
 DATA_FILE = 'data.json'
 
