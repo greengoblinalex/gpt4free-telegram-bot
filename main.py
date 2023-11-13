@@ -34,12 +34,8 @@ async def load_from_json(filename):
             return {}
 
 
-def get_user_messages_list(user_id, users_messages):
-    messages = []
-    if user_id in users_messages:
-        messages = users_messages[user_id]
-
-    if len(messages) > MAX_MESSAGES:
+def get_correct_messages_list(messages):
+    if len(messages) > MAX_MESSAGES - 2:
         messages = messages[-MAX_MESSAGES:]
 
     if len(messages) == 0 or messages[0] != FIRST_QUESTION:
@@ -53,7 +49,7 @@ def get_user_messages_list(user_id, users_messages):
 
 async def ask_gpt(messages):
     return await g4f.ChatCompletion.create_async(
-        model=g4f.models.gpt_35_turbo_16k_0613,
+        model=g4f.models.gpt_35_turbo_0613,
         messages=messages
     )
 
@@ -68,22 +64,19 @@ async def process_message(message: types.Message):
         user_id = str(message.from_user.id)
         users_messages = await load_from_json(DATA_FILE)
 
-        messages = get_user_messages_list(user_id, users_messages)
+        messages = users_messages.get(user_id, [])
 
-        messages.append(
-            {
-                'role': 'user',
-                'content': message.text
-            }
-        )
+        messages.append({'role': 'user', 'content': message.text})
 
         answer = await ask_gpt(messages)
         if answer == ERROR_PHRASE:
             answer = await ask_gpt(messages)
 
-        await bot.edit_message_text(answer, message.chat.id, wait_message.message_id)
+        await bot.delete_message(message.chat.id, wait_message.message_id)
+        await message.answer(answer)
 
         messages.append({'role': 'assistant', 'content': answer})
+        messages = get_correct_messages_list(user_id, users_messages)
         users_messages[user_id] = messages
 
         await save_to_json(DATA_FILE, users_messages)
