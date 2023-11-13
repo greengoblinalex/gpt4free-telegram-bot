@@ -49,7 +49,7 @@ def get_correct_messages_list(messages):
 
 async def ask_gpt(messages):
     return await g4f.ChatCompletion.create_async(
-        model=g4f.models.gpt_35_turbo_0613,
+        model=g4f.models.gpt_35_turbo_16k_0613,
         messages=messages
     )
 
