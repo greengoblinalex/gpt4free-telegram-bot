@@ -34,10 +34,7 @@ async def load_from_json(filename):
             return {}
 
 
-def get_correct_messages_list(messages):
-    if len(messages) > MAX_MESSAGES - 2:
-        messages = messages[-MAX_MESSAGES:]
-
+def get_messages_with_start_prompt(messages):
     if len(messages) == 0 or messages[0] != FIRST_QUESTION:
         messages.insert(0, FIRST_QUESTION)
 
@@ -47,7 +44,15 @@ def get_correct_messages_list(messages):
     return messages
 
 
-async def ask_gpt(messages):
+def get_correct_messages_list(messages):
+    return (
+        get_messages_with_start_prompt(messages[-MAX_MESSAGES:])
+        if len(messages) > MAX_MESSAGES - 2
+        else get_messages_with_start_prompt(messages)
+    )
+
+
+async def get_gpt_answer(messages):
     return await g4f.ChatCompletion.create_async(
         model=g4f.models.gpt_35_turbo_16k_0613,
         messages=messages
@@ -68,9 +73,11 @@ async def process_message(message: types.Message):
 
         messages.append({'role': 'user', 'content': message.text})
 
-        answer = await ask_gpt(messages)
-        if answer == ERROR_PHRASE:
-            answer = await ask_gpt(messages)
+        try:
+            answer = await get_gpt_answer(messages)
+        except Exception:
+            messages = get_messages_with_start_prompt([])
+            answer = await get_gpt_answer(messages)
 
         await bot.delete_message(message.chat.id, wait_message.message_id)
         await message.answer(answer)
