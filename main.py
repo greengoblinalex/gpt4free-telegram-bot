@@ -77,6 +77,7 @@ async def process_message(message: types.Message):
             answer = await get_gpt_answer(messages)
         except Exception:
             messages = get_messages_with_start_prompt([])
+            messages.append({'role': 'user', 'content': message.text})
             answer = await get_gpt_answer(messages)
 
         await bot.delete_message(message.chat.id, wait_message.message_id)
