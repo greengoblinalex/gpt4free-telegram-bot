@@ -76,7 +76,7 @@ async def process_message(message: types.Message):
         await message.answer(answer)
 
         messages.append({'role': 'assistant', 'content': answer})
-        messages = get_correct_messages_list(user_id, users_messages)
+        messages = get_correct_messages_list(messages)
         users_messages[user_id] = messages
 
         await save_to_json(DATA_FILE, users_messages)
