@@ -14,14 +14,13 @@ jobs:
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.IP }}
+        host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
-        password: ${{ secrets.PRIVATE_KEY }}
-        port: ${{ secrets.PORT }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
           cd gpt4free-telegram-bot/
-          git checkout main
-          git pull --ff-only
+          ${{ secrets.SCRIPT}}
           sudo systemctl restart gpt4free-telegram-bot.service
 
   send_message:
