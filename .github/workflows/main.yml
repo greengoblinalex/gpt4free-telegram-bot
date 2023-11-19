@@ -9,10 +9,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Debug SSH key
-      run: |
-        echo "${{ secrets.SSH_KEY }}" > ssh_key
-        cat ssh_key
     - name: Checkout repo
       uses: actions/checkout@v3
     - name: Executing remote ssh commands to deploy
@@ -23,6 +19,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
+          echo "${{ secrets.SSH_KEY }}" > ssh_key
+          cat ssh_key
           cd gpt4free-telegram-bot/
           git checkout main
           git pull --ff-only
