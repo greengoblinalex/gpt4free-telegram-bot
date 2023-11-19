@@ -18,11 +18,11 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        command: |
-          cd gpt4free-telegram-bot/;
-          git checkout main;
-          git pull --ff-only;
-          sudo systemctl restart gpt4free-telegram-bot.service;
+        script: |
+          cd gpt4free-telegram-bot/
+          git checkout main
+          git pull --ff-only
+          sudo systemctl restart gpt4free-telegram-bot.service
 
   send_message:
     runs-on: ubuntu-latest
