@@ -1,4 +1,4 @@
-name: Main foodgram workflow
+name: Main gpt4free-telegram-bot workflow
 
 on:
   push:
