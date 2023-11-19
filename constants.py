@@ -1,12 +1,19 @@
-MAX_TOKENS = 3072 - 45 - 40
-
 DATA_FILE = 'data.json'
 
+# Commands
 START_COMMAND = '/start'
 
+# Buttons
+CLEAR_DATA_BTN_TEXT = 'Очистить контекст'
+
+# Phrases
 START_PHRASE = 'Здравствуйте! Я ChatGPT-бот. Напишите свой вопрос, а я постараюсь ответить на него.'
 PLS_WAIT_PHRASE = 'Пожалуйста, подождите немного, пока я думаю над ответом...'
 ERROR_PHRASE = 'Слишком большое сообщение, пожалуйста, сократите его и отправьте еще раз.'
+CLEAR_DATA_PHRASE = 'Контекст очищен. Давайте начнем диалог с чистого листа. Чем я могу помочь?'
+
+# g4f
+MAX_TOKENS = 3072 - 45 - 40
 
 START_PROMPT = [
     {
