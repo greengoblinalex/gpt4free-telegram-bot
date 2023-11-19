@@ -13,8 +13,6 @@ jobs:
       run: eval $(ssh-agent -s)
     - name: Add SSH key to agent
       run: ssh-add <(echo "${{ secrets.SSH_KEY }}")
-      env:
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
     - name: Checkout repo
       uses: actions/checkout@v3
     - name: Executing remote ssh commands to deploy
