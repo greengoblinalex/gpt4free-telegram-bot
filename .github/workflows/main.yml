@@ -19,8 +19,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
-          eval $(ssh-agent -s)
-          ssh-add <(echo "$SSH_PRIVATE_KEY")
+          ssh-add ~/.ssh/id_rsa
           cd gpt4free-telegram-bot/
           git checkout main
           git pull --ff-only
