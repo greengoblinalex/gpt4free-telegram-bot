@@ -60,7 +60,7 @@ async def get_gpt_answer(messages: List) -> str:
 
 @dp.message_handler(text=CLEAR_DATA_BTN_TEXT)
 async def clear_data(message: types.Message):
-    user_id = str(message.from_user.id)  
+    user_id = str(message.from_user.id)
     users_messages = await load_from_json(DATA_FILE)
 
     if user_id in users_messages:
