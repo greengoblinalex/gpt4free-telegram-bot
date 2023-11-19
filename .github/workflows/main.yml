@@ -19,10 +19,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
-          screen -r
-          trap 'echo "Script interrupted"; exit 1' INT
-          echo "${{ secrets.SSH_PASSPHRASE }}" | git pull
-          python main.py
+          git pull
+          sudo systemctl restart gpt4free-telegram-bot.service
 
   send_message:
     runs-on: ubuntu-latest
@@ -33,4 +31,4 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: Бот обновлен!
+        message: Деплой завершен!
