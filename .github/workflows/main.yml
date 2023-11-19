@@ -9,6 +9,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+    - name: Debug SSH key
+      run: |
+        echo "${{ secrets.SSH_KEY }}" > ssh_key
+        cat ssh_key
     - name: Checkout repo
       uses: actions/checkout@v3
     - name: Executing remote ssh commands to deploy
