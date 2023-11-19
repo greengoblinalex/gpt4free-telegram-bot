@@ -19,6 +19,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
+          ssh -T git@github.com
           cd gpt4free-telegram-bot/
           git checkout main
           git pull --ff-only
