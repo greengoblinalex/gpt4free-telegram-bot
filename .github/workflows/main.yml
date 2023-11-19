@@ -20,7 +20,8 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
           cd gpt4free-telegram-bot/
-          git pull
+          git checkout main
+          git pull --ff-only
           sudo systemctl restart gpt4free-telegram-bot.service
 
   send_message:
@@ -33,4 +34,3 @@ jobs:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: Деплой завершен!
-        
