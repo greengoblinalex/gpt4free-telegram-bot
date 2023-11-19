@@ -12,14 +12,13 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v3
     - name: Executing remote ssh commands to deploy
-      uses: appleboy/ssh-action@master
+      uses: greengoblinalex/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
-          ssh -T git@github.com
           cd gpt4free-telegram-bot/
           git checkout main
           git pull --ff-only
@@ -30,7 +29,7 @@ jobs:
     needs: deploy
     steps:
     - name: Send message
-      uses: appleboy/telegram-action@master
+      uses: greengoblinalex/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
