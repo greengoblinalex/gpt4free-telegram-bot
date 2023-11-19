@@ -67,13 +67,13 @@ async def clear_data(message: types.Message):
         users_messages[user_id] = []
         await save_to_json(DATA_FILE, users_messages)
 
-    await message.answer(CLEAR_DATA_PHRASE, reply_markup=main_keyboard)
+    await message.answer(CLEAR_DATA_PHRASE)
 
 
 @dp.message_handler()
 async def process_message(message: types.Message):
     if message.text.lower() == START_COMMAND:
-        await message.answer(START_PHRASE, reply_markup=main_keyboard)
+        await message.answer(START_PHRASE)
     else:
         user_id = str(message.from_user.id)
         users_messages = await load_from_json(DATA_FILE)
