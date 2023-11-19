@@ -19,6 +19,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
+          cd gpt4free-telegram-bot.service/
           git pull
           sudo systemctl restart gpt4free-telegram-bot.service
 
