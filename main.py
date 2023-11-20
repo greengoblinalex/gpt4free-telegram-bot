@@ -21,6 +21,7 @@ dp = Dispatcher(bot)
 
 main_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
 main_keyboard.add(CLEAR_DATA_BTN_TEXT)
+empty_keyboard = types.ReplyKeyboardRemove()
 
 
 def get_messages_with_start_prompt(messages: List) -> List:
@@ -67,7 +68,8 @@ async def clear_data(message: types.Message):
         users_messages[user_id] = []
         await save_to_json(DATA_FILE, users_messages)
 
-    await message.answer(CLEAR_DATA_PHRASE)
+    await message.answer(CLEAR_DATA_PHRASE,
+                         reply_markup=empty_keyboard)
 
 
 @dp.message_handler()
