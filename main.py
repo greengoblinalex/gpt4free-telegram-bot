@@ -80,7 +80,7 @@ async def process_message(message: types.Message):
         user_id = str(message.from_user.id)
         users_messages = await load_from_json(DATA_FILE)
         messages: List = get_messages_with_start_prompt(
-            users_messages.get(user_id, []))
+            users_messages.get(user_id) or [])
 
         num_tokens_from_message = get_num_tokens_from_string(message.text)
         if num_tokens_from_message > MAX_TOKENS:
