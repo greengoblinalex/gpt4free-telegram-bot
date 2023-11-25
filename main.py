@@ -24,12 +24,6 @@ main_keyboard.add(CLEAR_DATA_BTN_TEXT)
 empty_keyboard = types.ReplyKeyboardRemove()
 
 
-def get_messages_with_start_prompt(messages: List) -> List:
-    if len(messages) == 0:
-        messages = START_PROMPT
-    return messages
-
-
 def get_num_tokens_from_user_messages(messages: List) -> int:
     tokens = 0
     for message in messages:
@@ -79,8 +73,8 @@ async def process_message(message: types.Message):
     else:
         user_id = str(message.from_user.id)
         users_messages = await load_from_json(DATA_FILE)
-        messages: List = get_messages_with_start_prompt(
-            users_messages.get(user_id) or [])
+
+        messages: List = users_messages.get(user_id) or [] + START_PROMPT
 
         num_tokens_from_message = get_num_tokens_from_string(message.text)
         if num_tokens_from_message > MAX_TOKENS:
