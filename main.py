@@ -10,9 +10,10 @@ from utils import (save_to_json, load_from_json,
                    get_num_tokens_from_string)
 from constants import (DATA_FILE, START_COMMAND,
                        CLEAR_DATA_BTN_TEXT,
-                       MAX_TOKENS, START_PROMPT,
-                       START_PHRASE, PLS_WAIT_PHRASE,
-                       ERROR_PHRASE, CLEAR_DATA_PHRASE)
+                       MAX_TOKENS, MAX_MESSAGES,
+                       START_PROMPT, START_PHRASE,
+                       PLS_WAIT_PHRASE, LIMIT_ERROR_PHRASE,
+                       RUNTIME_ERROR_PHRASE, CLEAR_DATA_PHRASE)
 
 load_dotenv()
 
@@ -78,7 +79,7 @@ async def process_message(message: types.Message):
 
         num_tokens_from_message = get_num_tokens_from_string(message.text)
         if num_tokens_from_message > MAX_TOKENS:
-            await message.answer(ERROR_PHRASE)
+            await message.answer(LIMIT_ERROR_PHRASE)
             return
 
         current_num_tokens = (
@@ -94,7 +95,17 @@ async def process_message(message: types.Message):
         messages.append({'role': 'user', 'content': message.text,
                         'tokens': num_tokens_from_message})
 
-        answer = await get_gpt_answer(messages)
+        if len(messages) > MAX_MESSAGES + len(START_PROMPT):
+            messages = messages[-MAX_MESSAGES:]
+
+        try:
+            answer = await get_gpt_answer(messages)
+        except RuntimeError as e:
+            print(e)
+            await bot.delete_message(message.chat.id, wait_message.message_id)
+            await message.answer(RUNTIME_ERROR_PHRASE)
+            return
+
         await bot.delete_message(message.chat.id, wait_message.message_id)
         await message.answer(answer, reply_markup=main_keyboard)
 
