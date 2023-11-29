@@ -95,9 +95,6 @@ async def process_message(message: types.Message):
         messages.append({'role': 'user', 'content': message.text,
                         'tokens': num_tokens_from_message})
 
-        if len(messages) > MAX_MESSAGES + len(START_PROMPT):
-            messages = messages[-MAX_MESSAGES:]
-
         try:
             answer = await get_gpt_answer(messages)
         except RuntimeError as e:
@@ -111,6 +108,9 @@ async def process_message(message: types.Message):
 
         messages.append({'role': 'assistant', 'content': answer,
                         'tokens': get_num_tokens_from_string(answer)})
+
+        if len(messages) > MAX_MESSAGES + len(START_PROMPT):
+            messages = list(START_PROMPT) + messages[-MAX_MESSAGES:]
 
         users_messages[user_id] = messages
         await save_to_json(DATA_FILE, users_messages)
