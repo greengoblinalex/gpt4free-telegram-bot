@@ -15,7 +15,7 @@ CLEAR_DATA_PHRASE = 'Контекст очищен. Давайте начнем 
 
 # g4f
 MAX_TOKENS = 3072 - 45 - 40
-MAX_MESSAGES = 6
+MAX_MESSAGES = 4
 
 START_PROMPT = (
     {
