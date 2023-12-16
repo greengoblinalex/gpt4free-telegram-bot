@@ -13,7 +13,8 @@ from constants import (DATA_FILE, START_COMMAND,
                        MAX_TOKENS, MAX_MESSAGES,
                        START_PROMPT, START_PHRASE,
                        PLS_WAIT_PHRASE, LIMIT_ERROR_PHRASE,
-                       RUNTIME_ERROR_PHRASE, CLEAR_DATA_PHRASE)
+                       RUNTIME_ERROR_PHRASE, CLEAR_DATA_PHRASE,
+                       EN_RUNTIME_ERROR_PHRASE)
 
 load_dotenv()
 
@@ -102,6 +103,9 @@ async def process_message(message: types.Message):
             await bot.delete_message(message.chat.id, wait_message.message_id)
             await message.answer(RUNTIME_ERROR_PHRASE)
             return
+
+        if answer == EN_RUNTIME_ERROR_PHRASE:
+            answer = RuntimeError
 
         await bot.delete_message(message.chat.id, wait_message.message_id)
         await message.answer(answer, reply_markup=main_keyboard)
