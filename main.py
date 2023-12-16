@@ -105,7 +105,7 @@ async def process_message(message: types.Message):
             return
 
         if answer == EN_RUNTIME_ERROR_PHRASE:
-            answer = RuntimeError
+            answer = RUNTIME_ERROR_PHRASE
 
         await bot.delete_message(message.chat.id, wait_message.message_id)
         await message.answer(answer, reply_markup=main_keyboard)
