@@ -48,7 +48,7 @@ def get_cleared_messages(messages: List,
     return [i for i in messages if i not in messages_to_delete]
 
 
-async def get_gpt_answer(messages: List) -> str:
+async def get_gpt_response(messages: List) -> str:
     return await g4f.ChatCompletion.create_async(
         model=g4f.models.gpt_35_turbo_16k_0613,
         messages=messages
@@ -96,22 +96,19 @@ async def process_message(message: types.Message):
         messages.append({'role': 'user', 'content': message.text,
                         'tokens': num_tokens_from_message})
 
-        try:
-            answer = await get_gpt_answer(messages)
-        except RuntimeError as e:
-            print(e)
-            await bot.delete_message(message.chat.id, wait_message.message_id)
-            await message.answer(RUNTIME_ERROR_PHRASE)
-            return
+        while True:
+            response = await get_gpt_response(messages)
+            if response:
+                break
 
-        if answer == EN_RUNTIME_ERROR_PHRASE:
-            answer = RUNTIME_ERROR_PHRASE
+        if response == EN_RUNTIME_ERROR_PHRASE:
+            response = RUNTIME_ERROR_PHRASE
 
-        await bot.delete_message(message.chat.id, wait_message.message_id)
-        await message.answer(answer, reply_markup=main_keyboard)
+        await bot.delete_message(wait_message.chat.id, wait_message.message_id)
+        await message.answer(response, reply_markup=main_keyboard)
 
-        messages.append({'role': 'assistant', 'content': answer,
-                        'tokens': get_num_tokens_from_string(answer)})
+        messages.append({'role': 'assistant', 'content': response,
+                        'tokens': get_num_tokens_from_string(response)})
 
         if len(messages) > MAX_MESSAGES + len(START_PROMPT):
             messages = list(START_PROMPT) + messages[-MAX_MESSAGES:]
